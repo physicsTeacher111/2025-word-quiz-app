@@ -15,7 +15,7 @@ if not student_name:
 # 단어장 로드 (word.csv 사용)
 @st.cache_data
 def load_words():
-    return pd.read_csv("word.csv", encoding="utf-8")
+    return pd.read_csv("word.csv", encoding="utf-8-sig")
 
 df = load_words()
 
