@@ -4,6 +4,22 @@ import random
 
 # 앱 제목
 st.title("📚 영어 단어 시험 앱")
+# 이름 입력
+st.subheader("🧑‍🎓 학생 정보 입력")
+student_name = st.text_input("이름을 입력하세요")
+if not student_name:
+    st.warning("먼저 이름을 입력하세요!")
+    st.stop()
+# 학습 기록 보기 버튼
+if st.button("📚 내 학습 기록 보기"):
+    try:
+        all_results = pd.DataFrame(sheet.get_all_records())
+        student_results = all_results[all_results["이름"] == student_name]
+        st.write(f"✅ {student_name}님의 최근 학습 기록입니다:")
+        st.dataframe(student_results)
+    except Exception as e:
+        st.error("기록을 불러오는 데 문제가 발생했습니다.")
+        st.exception(e)
 
 # CSV 파일 불러오기
 @st.cache_data
@@ -57,6 +73,29 @@ with st.form("quiz_form"):
         user_answers.append((row["한국어"], answer))
 
     submitted = st.form_submit_button("제출")
+
+st.info(f"🎯 총 점수: **{score} / {num_questions}**")
+# 📝 Google Sheet에 결과 저장
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+import datetime
+
+# Google Sheet 인증
+scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+creds = ServiceAccountCredentials.from_json_keyfile_name("your_credentials.json", scope)  # 여기에 .json 파일 이름
+client = gspread.authorize(creds)
+
+# 시트 열기
+sheet = client.open("student_quiz_results").worksheet("results")
+
+# 저장할 데이터 구성
+today = datetime.date.today().strftime("%Y-%m-%d")
+wrong_words = [correct for correct, user in user_answers if correct.strip() != user.strip()]
+score_str = f"{score}/{num_questions}"
+range_str = f"{start}~{end}"
+
+row = [student_name, today, score_str, range_str, ", ".join(wrong_words)]
+sheet.append_row(row)
 
 # 결과 표시
 if submitted:
