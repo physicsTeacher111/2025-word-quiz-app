@@ -102,6 +102,10 @@ if submitted:
     st.subheader("✅ 결과 확인")
     for i, (correct, user) in enumerate(user_answers):
         if str(correct).strip() == str(user).strip():
+            # 여러 정답 중 하나라도 맞으면 정답 처리
+acceptable_answers = [ans.strip() for ans in correct.replace(";", ",").split(",")]
+if user.strip() in acceptable_answers:
+
             st.success(f"Q{i+1}: 정답! ✅ ({user})")
             score += 1
         else:
