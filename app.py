@@ -24,7 +24,7 @@ if st.button("📚 내 학습 기록 보기"):
 # CSV 파일 불러오기
 @st.cache_data
 def load_words():
-    return pd.read_csv("words.csv")  # 번호, 영어, 한국어 컬럼 필요
+    return pd.read_csv("word.csv")  # 번호, 영어, 한국어 컬럼 필요
 
 df = load_words()
 
