@@ -98,16 +98,16 @@ row = [student_name, today, score_str, range_str, ", ".join(wrong_words)]
 sheet.append_row(row)
 
 # 결과 표시
+# 결과 표시
 if submitted:
     st.subheader("✅ 결과 확인")
     for i, (correct, user) in enumerate(user_answers):
-        if str(correct).strip() == str(user).strip():
-            # 여러 정답 중 하나라도 맞으면 정답 처리
-acceptable_answers = [ans.strip() for ans in correct.replace(";", ",").split(",")]
-if user.strip() in acceptable_answers:
-
+        # 여러 정답 중 하나라도 맞으면 정답 처리
+        acceptable_answers = [ans.strip() for ans in correct.replace(";", ",").split(",")]
+        if user.strip() in acceptable_answers:
             st.success(f"Q{i+1}: 정답! ✅ ({user})")
             score += 1
         else:
             st.error(f"Q{i+1}: 오답 ❌ - 정답은: {correct}, 입력한 답: {user}")
+
     st.info(f"🎯 총 점수: **{score} / {num_questions}**")
